@@ -326,7 +326,7 @@ void run_a_testcase(size_t index)
         printf("elapsed time: %0.3f ms, num_solutions: %" PRIuPTR ", recur_counter: %" PRIuPTR "\n\n"
                "num_guesses: %" PRIuPTR ", num_impossibles: %" PRIuPTR ", no_guess: %" PRIuPTR "\n"
                "guess %% = %0.1f %%, impossible %% = %0.1f %%, no_guess %% = %0.1f %%\n\n",
-               elapsed_time, num_solutions, (size_t)0, num_guesses,
+               elapsed_time, num_solutions, num_guesses,
                num_guesses,
                (size_t)0,
                (size_t)0,
