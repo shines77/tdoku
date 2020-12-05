@@ -317,10 +317,10 @@ void run_a_testcase(size_t index)
         printf("elapsed time: %0.3f ms, init_counter: %" PRIuPTR ", recur_counter: %" PRIuPTR "\n\n"
                "num_guesses: %" PRIuPTR ", num_impossibles: %" PRIuPTR ", no_guess: %" PRIuPTR "\n"
                "guess %% = %0.1f %%, impossible %% = %0.1f %%, no_guess %% = %0.1f %%\n\n",
-               elapsed_time, 0ULL, num_guesses,
+               elapsed_time, (size_t)0, num_guesses,
                num_guesses,
-               0ULL,
-               0ULL,
+               (size_t)0,
+               (size_t)0,
                100.0,
                0.0,
                0.0);
@@ -401,7 +401,7 @@ void run_tdoku_test(const char * filename)
     if (puzzleCount != 0) {
         printf("%0.1f usec/puzzle, %0.2f guesses/puzzle, %0.1f puzzles/sec\n\n",
                total_time * 1000.0 / puzzleCount,
-               (double)num_guesses / puzzleCount,
+               (double)total_num_guesses / puzzleCount,
                puzzleCount / (total_time / 1000.0));
     }
 }
