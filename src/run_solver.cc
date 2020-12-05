@@ -103,8 +103,10 @@ struct BasicSudoku {
         size_t pos = 0;
         for (size_t row = 0; row < Rows; row++) {
             for (size_t col = 0; col < Cols; col++) {
-                if (board[pos] != '.')
+                char val = board[pos];
+                if ((val != ' ') && (val != '0') && (val != '-')) {
                     filled++;
+                }
             }
         }
 
@@ -156,8 +158,10 @@ struct BasicSudoku {
         for (size_t row = 0; row < board.size(); row++) {
             const std::vector<char> & line = board[row];
             for (size_t col = 0; col < line.size(); col++) {
-                if (line[col] != '.')
+                char val = line[col];
+                if ((val != ' ') && (val != '0') && (val != '-')) {
                     filled++;
+                }
             }
         }
 
@@ -241,7 +245,7 @@ void read_sudoku_board(char board[Sudoku::BoardSize], size_t index)
                 col++;
                 assert(col <= Sudoku::Cols);
             }
-            else if (val == '.') {
+            else if ((val == '.') || (val == ' ') || (val == '-')) {
                 board[row_base + col] = '.';
                 col++;
                 assert(col <= Sudoku::Cols);
@@ -277,7 +281,7 @@ size_t read_sudoku_board(char board[Sudoku::BoardSize], char line[256])
                 col_valid++;
                 assert(col <= Sudoku::Cols);
             }
-            else if (val == '.') {
+            else if ((val == '.') || (val == ' ') || (val == '-')) {
                 board[row_base + col_valid] = '.';
                 col_valid++;
                 assert(col <= Sudoku::Cols);
