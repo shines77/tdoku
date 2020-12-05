@@ -389,7 +389,6 @@ void run_tdoku_test(const char * filename)
     printf("Total elapsed time: %0.3f ms\n\n", total_time);
     printf("num_guesses: %" PRIuPTR ", no_guess: %" PRIuPTR "\n"
            "guess %% = %0.1f %%, no_guess %% = %0.1f %%\n\n",
-           recur_counter,
            total_guesses, total_no_guess,
            (100.0 - no_guess_percent), no_guess_percent);
 
