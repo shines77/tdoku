@@ -1,0 +1,6 @@
+
+time ./run_benchmark -t1 -w1 -v0 -stdoku ./data/puzzles2_17_clue
+
+time ./run_benchmark -t1 -w1 -v0 -stdoku ../data/puzzles2_17_clue
+
+time ./run_solver ../data/puzzles2_17_clue
