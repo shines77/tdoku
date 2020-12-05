@@ -267,34 +267,26 @@ size_t read_sudoku_board(char board[Sudoku::BoardSize], char line[256])
     if ((*pline == '#') || ((*pline == '/') && (pline[1] = '/'))) {
         return 0;
     }
-    size_t grid_nums = 0;
-    for (size_t row = 0; row < Sudoku::Rows; row++) {
-        size_t row_base = row * 9;
-        size_t col_valid = 0;
-        for (size_t col = 0; col < Sudoku::Cols; col++) {
-            char val = *pline;
-            if (val >= '0' && val <= '9') {
-                if (val != '0')
-                    board[row_base + col_valid] = val;
-                else
-                    board[row_base + col_valid] = '.';
-                col_valid++;
-                assert(col <= Sudoku::Cols);
-            }
-            else if ((val == '.') || (val == ' ') || (val == '-')) {
-                board[row_base + col_valid] = '.';
-                col_valid++;
-                assert(col <= Sudoku::Cols);
-            }
-            else if (val == '\0') {
-                break;
-            }
-            pline++;  
+
+    size_t pos = 0;
+    char val;
+    while ((val = *pline++) != '\0') {
+        if (val >= '0' && val <= '9') {
+            if (val != '0')
+                board[pos] = val;
+            else
+                board[pos] = '.';
+            pos++;
+            assert(pos <= Sudoku::BoardSize);
         }
-        assert(col_valid == Sudoku::Cols || col_valid == 0);
-        grid_nums += col_valid;
+        else if ((val == '.') || (val == ' ') || (val == '-')) {
+            board[pos] = '.';
+            pos++;
+            assert(pos <= Sudoku::BoardSize);
+        }
     }
-    return grid_nums;
+    assert(pos <= Sudoku::BoardSize);
+    return pos;
 }
 
 void run_a_testcase(size_t index)
@@ -358,9 +350,9 @@ void run_tdoku_test(const char * filename)
                 ifs.getline(line, sizeof(line) - 1);
 
                 char board[Sudoku::BoardSize];
-                size_t grid_nums = read_sudoku_board(board, line);
+                size_t num_grids = read_sudoku_board(board, line);
                 // Sudoku::BoardSize = 81
-                if (grid_nums >= Sudoku::BoardSize) {
+                if (num_grids == Sudoku::BoardSize) {
                     char solution[Sudoku::BoardSize]{0};
 
         			jtest::StopWatch sw;
