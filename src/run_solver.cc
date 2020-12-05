@@ -18,6 +18,11 @@
 #include <bitset>
 
 #include "../include/tdoku.h"
+#include "all_solvers.h"
+#include "build_info.h"
+#include "klib/ketopt.h"
+#include "util.h"
+
 #include "TestCase.h"
 #include "CPUWarmUp.h"
 #include "StopWatch.h"
