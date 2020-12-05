@@ -294,7 +294,7 @@ void run_a_testcase(size_t index)
     double elapsed_time = 0.0;
     if (1)
     {
-        printf("--------------------------------\n\n");
+        printf("------------------------------------------\n\n");
         printf("tdoku\n\n");
 
         char board[Sudoku::BoardSize];
@@ -317,12 +317,14 @@ void run_a_testcase(size_t index)
 
         printf("elapsed time: %0.3f ms, num_solutions: %" PRIuPTR ", num_guesses: %" PRIuPTR "\n\n",
                elapsed_time, num_solutions, num_guesses);
+
+        printf("------------------------------------------\n\n");
     }
 }
 
 void run_tdoku_test(const char * filename)
 {
-    printf("--------------------------------\n\n");
+    printf("------------------------------------------\n\n");
     printf("tdoku\n\n");
 
     size_t total_guesses = 0;
@@ -390,6 +392,8 @@ void run_tdoku_test(const char * filename)
                (double)total_guesses / puzzleCount,
                puzzleCount / (total_time / 1000.0));
     }
+
+    printf("------------------------------------------\n\n");
 }
 
 int main(int argc, char * argv[])
