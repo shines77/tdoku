@@ -315,16 +315,8 @@ void run_a_testcase(size_t index)
 
 		Sudoku::display_board(solution);
 
-        printf("elapsed time: %0.3f ms, num_solutions: %" PRIuPTR ", recur_counter: %" PRIuPTR "\n\n"
-               "num_guesses: %" PRIuPTR ", num_impossibles: %" PRIuPTR ", no_guess: %" PRIuPTR "\n"
-               "guess %% = %0.1f %%, impossible %% = %0.1f %%, no_guess %% = %0.1f %%\n\n",
-               elapsed_time, num_solutions, num_guesses,
-               num_guesses,
-               (size_t)0,
-               (size_t)0,
-               100.0,
-               0.0,
-               0.0);
+        printf("elapsed time: %0.3f ms, num_solutions: %" PRIuPTR ", num_guesses: %" PRIuPTR "\n\n",
+               elapsed_time, num_solutions, num_guesses);
     }
 }
 
