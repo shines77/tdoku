@@ -333,9 +333,8 @@ void run_tdoku_test(const char * filename)
     printf("--------------------------------\n\n");
     printf("tdoku\n\n");
 
-    size_t total_num_guesses = 0;
-    size_t total_num_no_guess = 0;
-    size_t total_num_impossibles = 0;
+    size_t total_guesses = 0;
+    size_t total_no_guess = 0;
 
     size_t puzzleCount = 0;
     double total_time = 0.0;
@@ -365,10 +364,10 @@ void run_tdoku_test(const char * filename)
 
                     total_time += elapsed_time;
                     if (num_solutions != 0) {
-                        total_num_guesses += num_guesses;
-                        total_num_no_guess += 0;
-                        total_num_impossibles += 0;
+                        if (num_guesses == 0)
+                            total_no_guess++;
 
+                        total_guesses += num_guesses;
                         puzzleCount++;
 #ifndef NDEBUG
                         if (puzzleCount > 100)
@@ -384,24 +383,20 @@ void run_tdoku_test(const char * filename)
         std::cout << "Exception info: " << ex.what() << std::endl << std::endl;
     }
 
-    size_t recur_counter = total_num_guesses + total_num_no_guess + total_num_impossibles;
-    double no_guess_percent = calc_percent(total_num_no_guess, recur_counter);
-    double impossibles_percent = calc_percent(total_num_impossibles, recur_counter);
-    double guesses_percent = calc_percent(total_num_guesses, recur_counter);
+    double no_guess_percent = calc_percent(total_no_guess, puzzleCount);
 
     printf("Total puzzle count = %u\n\n", (uint32_t)puzzleCount);
     printf("Total elapsed time: %0.3f ms\n\n", total_time);
-    printf("recur_counter: %" PRIuPTR "\n\n"
-           "num_guesses: %" PRIuPTR ", num_impossibles: %" PRIuPTR ", no_guess: %" PRIuPTR "\n"
-           "guess %% = %0.1f %%, impossible %% = %0.1f %%, no_guess %% = %0.1f %%\n\n",
+    printf("num_guesses: %" PRIuPTR ", no_guess: %" PRIuPTR "\n"
+           "guess %% = %0.1f %%, no_guess %% = %0.1f %%\n\n",
            recur_counter,
-           total_num_guesses, total_num_impossibles, total_num_no_guess,
-           guesses_percent, impossibles_percent, no_guess_percent);
+           total_guesses, total_no_guess,
+           (100.0 - no_guess_percent), no_guess_percent);
 
     if (puzzleCount != 0) {
         printf("%0.1f usec/puzzle, %0.2f guesses/puzzle, %0.1f puzzles/sec\n\n",
                total_time * 1000.0 / puzzleCount,
-               (double)total_num_guesses / puzzleCount,
+               (double)total_guesses / puzzleCount,
                puzzleCount / (total_time / 1000.0));
     }
 }
