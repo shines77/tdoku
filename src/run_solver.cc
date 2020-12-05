@@ -103,7 +103,7 @@ struct BasicSudoku {
         size_t pos = 0;
         for (size_t row = 0; row < Rows; row++) {
             for (size_t col = 0; col < Cols; col++) {
-                char val = board[pos];
+                char val = board[pos++];
                 if ((val != '.') && (val != ' ') && (val != '0') && (val != '-')) {
                     filled++;
                 }
