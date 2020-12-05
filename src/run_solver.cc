@@ -104,7 +104,7 @@ struct BasicSudoku {
         for (size_t row = 0; row < Rows; row++) {
             for (size_t col = 0; col < Cols; col++) {
                 char val = board[pos];
-                if ((val != ' ') && (val != '0') && (val != '-')) {
+                if ((val != '.') && (val != ' ') && (val != '0') && (val != '-')) {
                     filled++;
                 }
             }
@@ -159,7 +159,7 @@ struct BasicSudoku {
             const std::vector<char> & line = board[row];
             for (size_t col = 0; col < line.size(); col++) {
                 char val = line[col];
-                if ((val != ' ') && (val != '0') && (val != '-')) {
+                if ((val != '.') && (val != ' ') && (val != '0') && (val != '-')) {
                     filled++;
                 }
             }
