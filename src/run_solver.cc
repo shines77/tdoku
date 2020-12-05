@@ -17,10 +17,12 @@
 #include <vector>
 #include <bitset>
 
+#include "tdoku.h"
 #include "TestCase.h"
 #include "CPUWarmUp.h"
 #include "StopWatch.h"
 
+// Index: [0 - 4]
 #define TEST_CASE_INDEX		4
 
 double calc_percent(size_t num_val, size_t num_total) {
@@ -218,6 +220,33 @@ struct BasicSudoku {
 // Standard sudoku definition
 typedef BasicSudoku<3, 3, 3, 3, 1, 9> Sudoku;
 
+void read_sudoku_board(char board[Sudoku::BoardSize], size_t index)
+{
+    for (size_t row = 0; row < Sudoku::Rows; row++) {
+        size_t row_base = row * 9;
+        size_t col = 0;
+        const char * prows = test_case[index].rows[row];
+        char val;
+        while ((val = *prows) != '\0') {
+            if (val >= '0' && val <= '9') {
+                if (val != '0')
+                    board[row_base + col] = val;
+                else
+                    board[row_base + col] = '.';
+                col++;
+                assert(col <= Sudoku::Cols);
+            }
+            else if (val == '.') {
+                board[row_base + col] = '.';
+                col++;
+                assert(col <= Sudoku::Cols);
+            }
+            prows++;  
+        }
+        assert(col == Sudoku::Cols);
+    }
+}
+
 size_t read_sudoku_board(char board[Sudoku::BoardSize], char line[256])
 {
     char * pline = line;
@@ -288,11 +317,10 @@ void run_a_testcase(size_t index)
         printf("elapsed time: %0.3f ms, init_counter: %" PRIuPTR ", recur_counter: %" PRIuPTR "\n\n"
                "num_guesses: %" PRIuPTR ", num_impossibles: %" PRIuPTR ", no_guess: %" PRIuPTR "\n"
                "guess %% = %0.1f %%, impossible %% = %0.1f %%, no_guess %% = %0.1f %%\n\n",
-               elapsed_time, 0,
+               elapsed_time, 0ULL, num_guesses,
                num_guesses,
-               num_guesses,
-               0,
-               0,
+               0ULL,
+               0ULL,
                100.0,
                0.0,
                0.0);
@@ -356,10 +384,10 @@ void run_tdoku_test(const char * filename)
         std::cout << "Exception info: " << ex.what() << std::endl << std::endl;
     }
 
-    size_t recur_counter = num_guesses + num_no_guess + num_impossibles;
-    double no_guess_percent = calc_percent(num_no_guess, recur_counter);
-    double impossibles_percent = calc_percent(num_impossibles, recur_counter);
-    double guesses_percent = calc_percent(num_guesses, recur_counter);
+    size_t recur_counter = total_num_guesses + total_num_no_guess + total_num_impossibles;
+    double no_guess_percent = calc_percent(total_num_no_guess, recur_counter);
+    double impossibles_percent = calc_percent(total_num_impossibles, recur_counter);
+    double guesses_percent = calc_percent(total_num_guesses, recur_counter);
 
     printf("Total puzzle count = %u\n\n", (uint32_t)puzzleCount);
     printf("Total elapsed time: %0.3f ms\n\n", total_time);
@@ -367,7 +395,7 @@ void run_tdoku_test(const char * filename)
            "num_guesses: %" PRIuPTR ", num_impossibles: %" PRIuPTR ", no_guess: %" PRIuPTR "\n"
            "guess %% = %0.1f %%, impossible %% = %0.1f %%, no_guess %% = %0.1f %%\n\n",
            recur_counter,
-           num_guesses, num_impossibles, num_no_guess,
+           total_num_guesses, total_num_impossibles, total_num_no_guess,
            guesses_percent, impossibles_percent, no_guess_percent);
 
     if (puzzleCount != 0) {
@@ -402,7 +430,7 @@ int main(int argc, char * argv[])
     if (1)
     {
         if (filename != nullptr) {
-            run_tdoku_test<v1::Solver>(filename);
+            run_tdoku_test(filename);
         }
     }
 
