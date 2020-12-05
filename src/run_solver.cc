@@ -245,7 +245,7 @@ void read_sudoku_board(char board[Sudoku::BoardSize], size_t index)
                 col++;
                 assert(col <= Sudoku::Cols);
             }
-            else if ((val == '.') || (val == ' ') || (val == '-')) {
+            else if (val == '.') {
                 board[row_base + col] = '.';
                 col++;
                 assert(col <= Sudoku::Cols);
