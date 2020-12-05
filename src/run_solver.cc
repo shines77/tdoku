@@ -376,7 +376,6 @@ void run_tdoku_test(const char * filename)
 #endif
                     }
                 }
-                else break;
             }
             ifs.close();
         }
