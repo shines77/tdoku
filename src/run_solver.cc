@@ -17,7 +17,7 @@
 #include <vector>
 #include <bitset>
 
-#include "tdoku.h"
+#include "../include/tdoku.h"
 #include "TestCase.h"
 #include "CPUWarmUp.h"
 #include "StopWatch.h"
