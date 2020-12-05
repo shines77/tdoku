@@ -2,6 +2,10 @@ cmake_minimum_required(VERSION 3.5)
 project(tdoku VERSION 1.0)
 set(CMAKE_CXX_STANDARD 14)
 
+if (NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Release)
+endif()
+
 set(ARGS "" CACHE STRING "Additional compiler args")
 # e.g., cmake . -DOPT=O2
 set(OPT "O3" CACHE STRING "Optimization level")
@@ -41,7 +45,7 @@ if (NOT MSVC)
     set(CMAKE_C_FLAGS_DEBUG   "${CMAKE_C_FLAGS_DEFAULT} -g -pg -D_DEBUG")
     ## For CXX_FLAGS
     ## -Wall -Werror -Wextra -Wno-format -Wno-unused-function
-    set(CMAKE_CXX_FLAGS_DEFAULT "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wno-unused-function -Wno-deprecated-declarations -Wno-unused-variable -fPIC")
+    set(CMAKE_CXX_FLAGS_DEFAULT "${CMAKE_CXX_FLAGS} -std=c++14 -Wall -Wno-unused-function -Wno-deprecated-declarations -Wno-unused-variable -fPIC")
     set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_DEFAULT} -O3 -DNDEBUG")
     set(CMAKE_CXX_FLAGS_DEBUG   "${CMAKE_CXX_FLAGS_DEFAULT} -g -pg -D_DEBUG")
 endif()
@@ -240,3 +244,9 @@ if (RUST_SUDOKU)
     target_link_libraries(run_benchmark rust_sudoku)
     target_link_libraries(run_tests rust_sudoku)
 endif()
+
+add_custom_target(release
+    COMMAND ${CMAKE_COMMAND} -DCMAKE_BUILD_TYPE=Release ${CMAKE_SOURCE_DIR}
+    COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target all
+    COMMENT "Switch CMAKE_BUILD_TYPE to Release"
+)
