@@ -38,6 +38,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "JCZSolve.h"
 
+size_t JCZSolve_guesses = 0;
+
 #if defined(_WIN32) || defined(_WINDOWS)
 static unsigned long
 MilliTime(void)                 // 1,000ths of a second of real time
@@ -118,9 +120,10 @@ int main(int argc, char * argv[])
     else if (total < 42949000) temp = (total * 100) / ((time + 500) / 1000);
     else if (total < 429490000) temp = (total * 10) / ((time + 5000) / 10000);
     else temp = total / ((time + 50000) / 100000);
-    printf("Examined %s puzzles in %lu.%03lu seconds or %s.%02lu puzzles/sec\n",
+    printf("guesses = %u\n\n", (unsigned int)JCZSolve_guesses);
+    printf("Examined %s puzzles in %lu.%03lu seconds or %s.%02lu puzzles/sec\n\n",
            CommaStr(total), time / 1000, time % 1000, CommaStr(temp / 100), temp % 100);
-    printf("Solved: %s puzzles, %s invalid, %s multi-solution\n",
+    printf("Solved: %s puzzles, %s invalid, %s multi-solution\n\n",
            CommaStr(counts[1]), CommaStr(counts[0]), CommaStr(counts[2]));
     return(0);
 }
