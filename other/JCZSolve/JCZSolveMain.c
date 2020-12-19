@@ -79,7 +79,7 @@ CommaStr(unsigned long value)   // Format a number with commas for (s,f)printf
     return(strs[indx]);
 }
 
-int main(int argc, char *argv [])
+int main(int argc, char * argv[])
 {
     FILE *fd;
     unsigned long time, total, temp;

@@ -42,56 +42,32 @@ struct SudokuBoard {
     const char * board[TotalSize];
 };
 
-template <size_t nPalaceRows = 3, size_t nPalaceCols = 3,
-          size_t nPalaceCountX = 3, size_t nPalaceCountY = 3,
+template <size_t nBoxCols = 3, size_t nBoxRows = 3,
+          size_t nBoxCountX = 3, size_t nBoxCountY = 3,
           size_t nMinNumber = 1, size_t nMaxNumber = 9>
 struct BasicSudoku {
-    static const size_t PalaceRows = nPalaceRows;       // 3
-    static const size_t PalaceCols = nPalaceCols;       // 3
-    static const size_t PalaceCountX = nPalaceCountX;   // 3
-    static const size_t PalaceCountY = nPalaceCountY;   // 3
-    static const size_t MinNumber = nMinNumber;         // 1
-    static const size_t MaxNumber = nMaxNumber;         // 9
+    static const size_t BoxCols = nBoxCols;         // 3
+    static const size_t BoxRows = nBoxRows;         // 3
+    static const size_t BoxCountX = nBoxCountX;     // 3
+    static const size_t BoxCountY = nBoxCountY;     // 3
+    static const size_t MinNumber = nMinNumber;     // 1
+    static const size_t MaxNumber = nMaxNumber;     // 9
 
-    static const size_t Rows = PalaceRows * PalaceCountY;
-    static const size_t Cols = PalaceCols * PalaceCountX;
-    static const size_t Palaces = PalaceCountX * PalaceCountY;
+    static const size_t Cols = BoxCols * BoxCountX;
+    static const size_t Rows = BoxRows * BoxCountY;
+    static const size_t Boxes = BoxCountX * BoxCountY;
     static const size_t Numbers = (MaxNumber - MinNumber) + 1;
 
-    static const size_t PalaceSize = PalaceRows * PalaceCols;
+    static const size_t BoxSize = BoxRows * BoxCols;
     static const size_t BoardSize = Rows * Cols;
-    static const size_t TotalSize = PalaceSize * Palaces * Numbers;
-
-    static const size_t TotalSize2 = Rows * Cols * Numbers;
-
-    static const size_t TotalConditions0 = 0;
-    static const size_t TotalConditions1 = Rows * Cols;
-    static const size_t TotalConditions2 = Rows * Numbers;
-    static const size_t TotalConditions3 = Cols * Numbers;
-    static const size_t TotalConditions4 = Palaces * Numbers;
-
-    static const size_t TotalConditions01 = TotalConditions0  + TotalConditions1;
-    static const size_t TotalConditions02 = TotalConditions01 + TotalConditions2;
-    static const size_t TotalConditions03 = TotalConditions02 + TotalConditions3;
-    static const size_t TotalConditions04 = TotalConditions03 + TotalConditions4;
-
-    static const size_t TotalConditions =
-        TotalConditions1 + TotalConditions2 + TotalConditions3 + TotalConditions4;
+    static const size_t TotalSize = Rows * Cols * Numbers;
+    static const size_t TotalSize2 = Boxes * BoxSize * Numbers;
 
     static void clear_board(char board[BasicSudoku::BoardSize]) {
         size_t pos = 0;
         for (size_t row = 0; row < Rows; row++) {
             for (size_t col = 0; col < Cols; col++) {
                 board[pos++] = '.';
-            }
-        }
-    }
-
-    static void clear_board(std::vector<std::vector<char>> & board) {
-        for (size_t row = 0; row < board.size(); row++) {
-            std::vector<char> & line = board[row];
-            for (size_t col = 0; col < line.size(); col++) {
-                line[col] = '.';
             }
         }
     }
@@ -122,7 +98,7 @@ struct BasicSudoku {
         printf("\n");
         // printf("  ------- ------- -------\n");
         printf(" ");
-        for (size_t countX = 0; countX < PalaceCountX; countX++) {
+        for (size_t countX = 0; countX < BoxCountX; countX++) {
             printf(" -------");
         }
         printf("\n");
@@ -135,70 +111,14 @@ struct BasicSudoku {
                     printf(". ");
                 else
                     printf("%c ", val);
-                if ((col % PalaceCols) == (PalaceCols - 1))
+                if ((col % BoxCols) == (BoxCols - 1))
                     printf("| ");
             }
             printf("\n");
-            if ((row % PalaceRows) == (PalaceRows - 1)) {
+            if ((row % BoxRows) == (BoxRows - 1)) {
                 // printf("  ------- ------- -------\n");
                 printf(" ");
-                for (size_t countX = 0; countX < PalaceCountX; countX++) {
-                    printf(" -------");
-                }
-                printf("\n");
-            }
-        }
-        printf("\n");
-    }
-
-    static void display_board(const std::vector<std::vector<char>> & board,
-                              bool is_input = false,
-                              int idx = -1) {
-        int filled = 0;
-        for (size_t row = 0; row < board.size(); row++) {
-            const std::vector<char> & line = board[row];
-            for (size_t col = 0; col < line.size(); col++) {
-                char val = line[col];
-                if ((val != '.') && (val != ' ') && (val != '0') && (val != '-')) {
-                    filled++;
-                }
-            }
-        }
-
-        if (is_input) {
-            printf("The input is: (filled = %d)\n", filled);
-        }
-        else {
-            if (idx == -1)
-                printf("The answer is:\n");
-            else
-                printf("The answer # %d is:\n", idx + 1);
-        }
-        printf("\n");
-        // printf("  ------- ------- -------\n");
-        printf(" ");
-        for (size_t countX = 0; countX < PalaceCountX; countX++) {
-            printf(" -------");
-        }
-        printf("\n");
-        for (size_t row = 0; row < Rows; row++) {
-            assert(board.size() >= Rows);
-            printf(" | ");
-            for (size_t col = 0; col < Cols; col++) {
-                assert(board[row].size() >= Cols);
-                char val = board[row][col];
-                if (val == ' ' || val == '0' || val == '-')
-                    printf(". ");
-                else
-                    printf("%c ", val);
-                if ((col % PalaceCols) == (PalaceCols - 1))
-                    printf("| ");
-            }
-            printf("\n");
-            if ((row % PalaceRows) == (PalaceRows - 1)) {
-                // printf("  ------- ------- -------\n");
-                printf(" ");
-                for (size_t countX = 0; countX < PalaceCountX; countX++) {
+                for (size_t countX = 0; countX < BoxCountX; countX++) {
                     printf(" -------");
                 }
                 printf("\n");
@@ -215,21 +135,12 @@ struct BasicSudoku {
             i++;
         }
     }
-
-    static void display_boards(std::vector<std::vector<std::vector<char>>> & boards) {
-        printf("Total answers: %d\n\n", (int)boards.size());
-        int i = 0;
-        for (auto board : boards) {
-            BasicSudoku::display_board(board, false, i);
-            i++;
-        }
-    }
 };
 
 // Standard sudoku definition
 typedef BasicSudoku<3, 3, 3, 3, 1, 9> Sudoku;
 
-void read_sudoku_board(char board[Sudoku::BoardSize], size_t index)
+void make_sudoku_board(char board[Sudoku::BoardSize], size_t index)
 {
     for (size_t row = 0; row < Sudoku::Rows; row++) {
         size_t row_base = row * 9;
@@ -298,7 +209,7 @@ void run_a_testcase(size_t index)
         printf("tdoku\n\n");
 
         char board[Sudoku::BoardSize];
-        read_sudoku_board(board, index);
+        make_sudoku_board(board, index);
 
         Sudoku::display_board(board, true);
 

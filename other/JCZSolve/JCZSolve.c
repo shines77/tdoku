@@ -588,22 +588,22 @@ InitSudoku(const char *board)                       // Setup everything and load
     B=g->bands[I*3+K]; \
     C=g->bands[I*3+L]; \
     S = ((A | (A>>9) | (A>>18)) & 0x1FF); \
-    g->bands[I*3+L] &= TblMaskSingle[S] ;/* & TblMaskDouble[S | ((B | (B>>9) | (B>>18)) & 0x1FF)]; */\
-    g->bands[I*3+K] &= TblMaskSingle[S] ;/* & TblMaskDouble[S | ((C | (C>>9) | (C>>18)) & 0x1FF)]; */\
+    g->bands[I*3+L] &= TblMaskSingle[S];    /* & TblMaskDouble[S | ((B | (B>>9) | (B>>18)) & 0x1FF)]; */\
+    g->bands[I*3+K] &= TblMaskSingle[S];    /* & TblMaskDouble[S | ((C | (C>>9) | (C>>18)) & 0x1FF)]; */\
     S = TblRowUniq[TblShrinkSingle[Shrink] & TblColumnSingle[S]]; \
     g->prevBands[I*3+J] = g->bands[I*3+J] = A;
 
 #define UPWCL(I,P,Q,R,T,U,V,W,X) \
     cl = ~(A & TblRowMask[S]); \
     g->unsolvedCells[I] &= cl; \
-    g->bands[P]&= cl; \
-    g->bands[Q]&= cl; \
-    g->bands[R]&= cl; \
-    g->bands[T]&= cl; \
-    g->bands[U]&= cl; \
-    g->bands[V]&= cl; \
-    g->bands[W]&= cl; \
-    g->bands[X]&= cl;
+    g->bands[P] &= cl; \
+    g->bands[Q] &= cl; \
+    g->bands[R] &= cl; \
+    g->bands[T] &= cl; \
+    g->bands[U] &= cl; \
+    g->bands[V] &= cl; \
+    g->bands[W] &= cl; \
+    g->bands[X] &= cl;
 
 static int
 Update()                                            // Core of fast processing - by zhouyundong
@@ -850,31 +850,31 @@ ApplySingleOrEmptyCells(void)                       // Find singles, bi-value ce
         R1 |= bandData;
         bandData = g->bands[subBand + 6];
         unsigned int R3 = R2 & bandData;                    // R3 - pencil mark in cell three or more times
-        R2 |= R1&bandData;
+        R2 |= R1 & bandData;
         R1 |= bandData;
         bandData = g->bands[subBand + 9];
-        R3 |= R2&bandData;
-        R2 |= R1&bandData;
+        R3 |= R2 & bandData;
+        R2 |= R1 & bandData;
         R1 |= bandData;
         bandData = g->bands[subBand + 12];
-        R3 |= R2&bandData;
-        R2 |= R1&bandData;
+        R3 |= R2 & bandData;
+        R2 |= R1 & bandData;
         R1 |= bandData;
         bandData = g->bands[subBand + 15];
-        R3 |= R2&bandData;
-        R2 |= R1&bandData;
+        R3 |= R2 & bandData;
+        R2 |= R1 & bandData;
         R1 |= bandData;
         bandData = g->bands[subBand + 18];
-        R3 |= R2&bandData;
-        R2 |= R1&bandData;
+        R3 |= R2 & bandData;
+        R2 |= R1 & bandData;
         R1 |= bandData;
         bandData = g->bands[subBand + 21];
-        R3 |= R2&bandData;
-        R2 |= R1&bandData;
+        R3 |= R2 & bandData;
+        R2 |= R1 & bandData;
         R1 |= bandData;
         bandData = g->bands[subBand + 24];
-        R3 |= R2&bandData;
-        R2 |= R1&bandData;
+        R3 |= R2 & bandData;
+        R2 |= R1 & bandData;
         R1 |= bandData;
 #endif
         if (R1 != BIT_SET_27) return(1);                        // Something is locked, can't be solved
