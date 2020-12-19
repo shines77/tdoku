@@ -548,9 +548,9 @@ SetSolvedMask(int band, unsigned int mask)          // Set a cell as solved - us
     g->unsolvedCells[subBand] &= mask;
     int rowBit = (band / 3) * 9 + cellToRow[cell];
     g->unsolvedRows[rowBit / 27] &= ~(1 << (mod27[rowBit]));
-    for (int indx = subBand; indx < 27; indx += 3) {
-        if (indx == band) continue;
-        g->bands[indx] &= mask;
+    for (int index = subBand; index < 27; index += 3) {
+        if (index == band) continue;
+        g->bands[index] &= mask;
     }
 #endif
     return(1);
@@ -581,19 +581,19 @@ InitSudoku(const char *board)                       // Setup everything and load
 //  This copy has been optimized by champagne and JasonLion in minor ways
 //
 
-#define UPDN(I,J,K,L) \
-    A=g->bands[I*3+J]; \
-    Shrink = (TblShrinkMask[A & 0x1FF] | TblShrinkMask[(A>>9) & 0x1FF]<<3 | TblShrinkMask[(A>>18)]<<6); \
-    if ((A &=TblComplexMask[Shrink])==0)  return(0); \
-    B=g->bands[I*3+K]; \
-    C=g->bands[I*3+L]; \
-    S = ((A | (A>>9) | (A>>18)) & 0x1FF); \
-    g->bands[I*3+L] &= TblMaskSingle[S];    /* & TblMaskDouble[S | ((B | (B>>9) | (B>>18)) & 0x1FF)]; */\
-    g->bands[I*3+K] &= TblMaskSingle[S];    /* & TblMaskDouble[S | ((C | (C>>9) | (C>>18)) & 0x1FF)]; */\
+#define UPDN(I, J, K, L) \
+    A=g->bands[I * 3 + J]; \
+    Shrink = (TblShrinkMask[A & 0x1FF] | TblShrinkMask[(A >> 9) & 0x1FF] << 3 | TblShrinkMask[(A >> 18)] << 6); \
+    if ((A &= TblComplexMask[Shrink]) == 0) return(0); \
+    B=g->bands[I * 3 + K]; \
+    C=g->bands[I * 3 + L]; \
+    S = ((A | (A >> 9) | (A >> 18)) & 0x1FF); \
+    g->bands[I * 3 + L] &= TblMaskSingle[S];    /* & TblMaskDouble[S | ((B | (B >> 9) | (B >> 18)) & 0x1FF)]; */\
+    g->bands[I * 3 + K] &= TblMaskSingle[S];    /* & TblMaskDouble[S | ((C | (C >> 9) | (C >> 18)) & 0x1FF)]; */\
     S = TblRowUniq[TblShrinkSingle[Shrink] & TblColumnSingle[S]]; \
-    g->prevBands[I*3+J] = g->bands[I*3+J] = A;
+    g->prevBands[I * 3 + J] = g->bands[I * 3 + J] = A;
 
-#define UPWCL(I,P,Q,R,T,U,V,W,X) \
+#define UPWCL(I, P, Q, R, T, U, V, W, X) \
     cl = ~(A & TblRowMask[S]); \
     g->unsolvedCells[I] &= cl; \
     g->bands[P] &= cl; \
@@ -926,7 +926,7 @@ GuessBiValueInCell(void)                            // Try both options for cell
             int band = subBand;
             for (int digit = 0; digit < 9; ++digit, band += 3) {
                 if (g->bands[band] & map) {
-                    if (--tries) {                              // First of pair
+                    if (--tries) {                          // First of pair
                         memcpy(g + 1, g, sizeof(State));
                         g->bands[band] ^= map;
                         ++g;
@@ -935,7 +935,7 @@ GuessBiValueInCell(void)                            // Try both options for cell
                         if (FullUpdate()) Guess();
                         --g;
                     }
-                    else {                                      // Second of pair
+                    else {                                  // Second of pair
                         SetSolvedMask(band, map);
                         if (FullUpdate()) Guess();
                         return(1);
@@ -957,11 +957,11 @@ GuessFirstCell(void)                                // Guess all possibilities i
         int band = subBand;
         for (int digit = 0; digit < 9; ++digit, band += 3) {
             if (g->bands[band] & cellMask) {
-                memcpy(g + 1, g, sizeof(State));                // Eliminate option in the current stack entry
+                memcpy(g + 1, g, sizeof(State));            // Eliminate option in the current stack entry
                 g->bands[band] ^= cellMask;
                 ++g;
                 JCZSolve_guesses++;
-                SetSolvedMask(band, cellMask);                  // and try it out in a nested stack entry
+                SetSolvedMask(band, cellMask);              // and try it out in a nested stack entry
                 if (FullUpdate()) Guess();
                 --g;
             }
@@ -978,7 +978,7 @@ Guess(void)                                         // Either already solved, or
         numSolutions++;
         return;
     }
-    if (!GuessBiValueInCell()) GuessFirstCell();                // Both of these recurse
+    if (!GuessBiValueInCell()) GuessFirstCell();            // Both of these recurse
 }
 
 static int
