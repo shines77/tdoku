@@ -120,7 +120,7 @@ int main(int argc, char * argv[])
     else if (total < 42949000) temp = (total * 100) / ((time + 500) / 1000);
     else if (total < 429490000) temp = (total * 10) / ((time + 5000) / 10000);
     else temp = total / ((time + 50000) / 100000);
-    printf("guesses = %u\n\n", (unsigned int)JCZSolve_guesses);
+    printf("total_guesses = %u\n\n", (unsigned int)JCZSolve_guesses);
     printf("Examined %s puzzles in %lu.%03lu seconds or %s.%02lu puzzles/sec\n\n",
            CommaStr(total), time / 1000, time % 1000, CommaStr(temp / 100), temp % 100);
     printf("Solved: %s puzzles, %s invalid, %s multi-solution\n\n",
