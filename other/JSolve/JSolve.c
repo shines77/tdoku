@@ -617,7 +617,7 @@ HiddenSingles(void)                 // Look for hidden singles
     If one of the pairs of neighboring strips (BC or DG) is missing a digit, which is
     contained in the original strip, we have a locked candidate. The candidate is locked
     to the original strip and can not appear in any of the four neighbors. If the other
-    paid of neighboring strips contains that digit, we have an elimination.
+    pair of neighboring strips contains that digit, we have an elimination.
 
     This routine is based on looking for candidates that occur in the primary strip and
     one pair of neighboring strips, but not int the other pair of neighboring strips. When

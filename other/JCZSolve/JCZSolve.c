@@ -501,7 +501,7 @@ static const int MultiplyDeBruijnBitPosition32[32] = {
     0, 1, 28, 2, 29, 14, 24, 3, 30, 22, 20, 15, 25, 17, 4, 8,
     31, 27, 13, 23, 21, 19, 16, 7, 26, 12, 18, 6, 11, 5, 10, 9
 };
-#define BitPos(map)     MultiplyDeBruijnBitPosition32[((unsigned int)(map*0x077CB531U))>>27]
+#define BitPos(map)     MultiplyDeBruijnBitPosition32[((unsigned int)(map * 0x077CB531U)) >> 27]
 
 static int FullUpdate(void);
 static void Guess(void);
@@ -512,13 +512,16 @@ SetSolvedDigit(int cell, int digit)                 // Set a cell as solved - us
     int subBand = cellToSubBand[cell];
     int band = digitToBaseBand[digit] + subBand;
     unsigned mask = cellToMask[cell];
-    if (!(g->bands[band] & mask)) return(0);
+    if (!(g->bands[band] & mask))
+        return (0);
+
     g->bands[band] &= TblSelfMask[cell];
     unsigned int tblMask = TblOtherMask[cell];
     g->bands[TblAnother1[band]] &= tblMask;
     g->bands[TblAnother2[band]] &= tblMask;
     mask = ~mask;
     g->unsolvedCells[subBand] &= mask;
+
     int rowBit = digit * 9 + cellToRow[cell];
     g->unsolvedRows[rowBit / 27] &= ~(1 << (mod27[rowBit]));
     g->bands[subBand] &= mask;
@@ -531,13 +534,14 @@ SetSolvedDigit(int cell, int digit)                 // Set a cell as solved - us
     g->bands[subBand + 21] &= mask;
     g->bands[subBand + 24] &= mask;
     g->bands[band] |= ~mask;
-    return(1);
+    return (1);
 }
 
 static int
 SetSolvedMask(int band, unsigned int mask)          // Set a cell as solved - used in various guess routines
 {
-    if (!(g->bands[band] & mask)) return(0);
+    if (!(g->bands[band] & mask))
+        return (0);
     int subBand = mod3[band];
     int cell = subBand * 27 + BitPos(mask);
     g->bands[band] &= TblSelfMask[cell];
@@ -553,7 +557,7 @@ SetSolvedMask(int band, unsigned int mask)          // Set a cell as solved - us
         g->bands[index] &= mask;
     }
 #endif
-    return(1);
+    return (1);
 }
 
 static int
@@ -561,19 +565,24 @@ InitSudoku(const char *board)                       // Setup everything and load
 {
     g = stack;
     numSolutions = 0;
-    for (int band = 0; band < 3 * 9; ++band) g->bands[band] = BIT_SET_27;
+    for (int band = 0; band < 3 * 9; ++band) {
+        g->bands[band] = BIT_SET_27;
+    }
+
     memset(g->prevBands, 0, sizeof(g->prevBands));
     g->unsolvedCells[0] = g->unsolvedCells[1] = g->unsolvedCells[2] = BIT_SET_27;
     g->unsolvedRows[0] = g->unsolvedRows[1] = g->unsolvedRows[2] = BIT_SET_27;
     g->pairs[0] = g->pairs[1] = g->pairs[2] = 0;
+
     for (int cell = 0; cell < 81; ++cell, ++board) {
-        if (isdigit(*board) && *board != '0') {
+        if (isdigit(*board) && (*board != '0')) {
             int digit = *board - '1';
-            if (!SetSolvedDigit(cell, digit)) return(0);
+            if (!SetSolvedDigit(cell, digit))
+                return (0);
         }
-        else if (!*board) return(0);                // End of string before end of puzzle!
+        else if (!*board) return (0);               // End of string before end of puzzle!
     }
-    return(1);
+    return (1);
 }
 
 //
@@ -582,11 +591,11 @@ InitSudoku(const char *board)                       // Setup everything and load
 //
 
 #define UPDN(I, J, K, L) \
-    A=g->bands[I * 3 + J]; \
+    A = g->bands[I * 3 + J]; \
     Shrink = (TblShrinkMask[A & 0x1FF] | TblShrinkMask[(A >> 9) & 0x1FF] << 3 | TblShrinkMask[(A >> 18)] << 6); \
-    if ((A &= TblComplexMask[Shrink]) == 0) return(0); \
-    B=g->bands[I * 3 + K]; \
-    C=g->bands[I * 3 + L]; \
+    if ((A &= TblComplexMask[Shrink]) == 0) return (0); \
+    B = g->bands[I * 3 + K]; \
+    C = g->bands[I * 3 + L]; \
     S = ((A | (A >> 9) | (A >> 18)) & 0x1FF); \
     g->bands[I * 3 + L] &= TblMaskSingle[S];    /* & TblMaskDouble[S | ((B | (B >> 9) | (B >> 18)) & 0x1FF)]; */\
     g->bands[I * 3 + K] &= TblMaskSingle[S];    /* & TblMaskDouble[S | ((C | (C >> 9) | (C >> 18)) & 0x1FF)]; */\
@@ -613,7 +622,7 @@ Update()                                            // Core of fast processing -
         Shrink = 0;
         if (!g->unsolvedRows[0]) goto digit3;
         {
-            register unsigned int  AR = g->unsolvedRows[0]; // valid for digits 0,1,2
+            register unsigned int AR = g->unsolvedRows[0];  // valid for digits 0,1,2
             if (!(AR & 0x1ff)) goto digit1;
             if (g->bands[0 * 3 + 0] == g->prevBands[0 * 3 + 0]) goto digit0b;
             UPDN(0, 0, 1, 2);
@@ -838,8 +847,8 @@ ApplySingleOrEmptyCells(void)                       // Find singles, bi-value ce
         unsigned int R1 = 0, R2 = 0, R3 = 0;
         for (int band = subBand; band < 27; band += 3) {
             unsigned int bandData = g->bands[band];
-            R3 |= R2&bandData;
-            R2 |= R1&bandData;
+            R3 |= R2 & bandData;
+            R2 |= R1 & bandData;
             R1 |= bandData;
         }
 #else
@@ -877,7 +886,7 @@ ApplySingleOrEmptyCells(void)                       // Find singles, bi-value ce
         R2 |= R1 & bandData;
         R1 |= bandData;
 #endif
-        if (R1 != BIT_SET_27) return(1);                        // Something is locked, can't be solved
+        if (R1 != BIT_SET_27) return (1);                       // Something is locked, can't be solved
         g->pairs[subBand] = R2 & ~R3;                           // Exactly two pencil marks in cell
         R1 &= ~R2;                                              // Exactly one pencil mark in cell
         R1 &= g->unsolvedCells[subBand];                        // Ignore already solved cells
@@ -892,10 +901,10 @@ ApplySingleOrEmptyCells(void)                       // Find singles, bi-value ce
                     break;
                 }
             }
-            if (digit == 9) return(1);                          // Previous singles locked the cell
+            if (digit == 9) return (1);                         // Previous singles locked the cell
         }
     }
-    return(0);
+    return (0);
 }
 
 static void
@@ -938,13 +947,13 @@ GuessBiValueInCell(void)                            // Try both options for cell
                     else {                                  // Second of pair
                         SetSolvedMask(band, map);
                         if (FullUpdate()) Guess();
-                        return(1);
+                        return (1);
                     }
                 }
             }
         }
     }
-    return(0);
+    return (0);
 }
 
 static void
@@ -984,15 +993,15 @@ Guess(void)                                         // Either already solved, or
 static int
 FullUpdate(void)                                    // Get as far as possible without guessing
 {
-    if (numSolutions >= limitSolutions) return(0);
+    if (numSolutions >= limitSolutions) return (0);
     while (1) {
         if (!Update()) return(0);                           // game locked in update
         if (!(g->unsolvedCells[0] | g->unsolvedCells[1] | g->unsolvedCells[2])) return(2);
-        if (ApplySingleOrEmptyCells()) return(0);           // locked empty cell or conflict singles in cells
+        if (ApplySingleOrEmptyCells()) return (0);          // locked empty cell or conflict singles in cells
         if (singleApplied) continue;                        // Found a single, run Update again
         break;
     }
-    return(1);
+    return (1);
 }
 
 // uniform interface
@@ -1003,9 +1012,9 @@ JCZSolver(const char *puzzle, char *solutionPtr, int limit)
     numSolutions = 0;
     limitSolutions = limit;
     solution = solutionPtr;
-    if (!InitSudoku(puzzle)) return(0);                     // locked invalid cell
-    if (ApplySingleOrEmptyCells()) return(0);               // locked empty cell or conflict singles in cells
-    if (!FullUpdate()) return(0);
+    if (!InitSudoku(puzzle)) return (0);                    // locked invalid cell
+    if (ApplySingleOrEmptyCells()) return (0);              // locked empty cell or conflict singles in cells
+    if (!FullUpdate()) return (0);
     Guess();
     return(numSolutions);
 }
